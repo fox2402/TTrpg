@@ -3,4 +3,4 @@ project(TTrpg)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(TTrpg src/main.cpp)
+add_executable(ttrpg src/main.cpp)
