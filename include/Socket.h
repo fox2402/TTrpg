@@ -11,34 +11,44 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
-#pragma comment(lib, "ws2_32.lib")
 #endif
 
 #include <unistd.h>
 #include <fcntl.h>
-
+#include <string>
 
 namespace network
 {
     class Socket
     {
-
+    enum sock_status
+    {
+        CLOSED,
+        OPENED,
+        BINDED,
+        LISTENING,
+        CONNECTED
+    };
     public:
-#ifdef _WIN32
         static void windsoc_startup();
         static void windsoc_cleanup();
-#endif
         Socket();
+        ~Socket();
+        void bind_and_listen(int port, int backlog);
+        void connect_to_addr(std::string addr, int port);
+
     private:
+        Socket::sock_status status {sock_status::CLOSED};
+
 
 #ifdef __linux__
         int socket;
 #endif
 
 #ifdef _WIN32
-        static WSADATA data;
-        static bool wsinit {false};
-        SOCKET socket;
+        static bool& getInit();
+        SOCKET sock;
+        SOCKADDR_IN sin;
 #endif
     };
 }
