@@ -62,6 +62,21 @@ namespace network
         status = sock_status::CONNECTED;
     }
 
+    int Socket::send(void *buf, int len, int flags)
+    {
+        int i = ::send(sock, static_cast<const char*>(buf), len, flags);
+        if (i == -1)
+            throw std::system_error(errno, std::system_category(), "Failed to send");
+        return i;
+
+    }
+
+    template<>
+    SOCKET Socket::getUnderlyingSocket()
+    {
+        return sock;
+    }
+
 
 #endif
 

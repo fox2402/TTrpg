@@ -36,6 +36,14 @@ namespace network
         ~Socket();
         void bind_and_listen(int port, int backlog);
         void connect_to_addr(std::string addr, int port);
+#ifdef _WIN32
+        int send(void* buf, int len, int flags);
+#endif
+#ifdef __linux__
+        ssize_t send(void* buf, size_t len, int flags);
+#endif
+        template<typename T>
+        T getUnderlyingSocket();
 
     private:
         Socket::sock_status status {sock_status::CLOSED};
@@ -52,3 +60,5 @@ namespace network
 #endif
     };
 }
+
+#include "Socket.hxx"
