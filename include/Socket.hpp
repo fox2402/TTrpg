@@ -38,6 +38,7 @@ namespace network
         void connect_to_addr(std::string addr, int port);
 #ifdef _WIN32
         int send(void* buf, int len, int flags);
+        int recv(void* buf, int len, int flags);
 #endif
 #ifdef __linux__
         ssize_t send(void* buf, size_t len, int flags);

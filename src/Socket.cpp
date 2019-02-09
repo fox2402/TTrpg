@@ -70,6 +70,13 @@ namespace network
         return i;
 
     }
+    int Socket::recv(void *buf, int len, int flags)
+    {
+        int i = ::recv(sock,static_cast<char*>(buf), len, flags);
+        if (i == -1)
+            throw std::system_error(errno, std::system_category(), "Failed to recv");
+        return i;
+    }
 
     template<>
     SOCKET Socket::getUnderlyingSocket()
