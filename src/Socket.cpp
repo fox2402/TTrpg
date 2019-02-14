@@ -5,6 +5,7 @@
 
 #include <system_error>
 
+#include "winsock_except.hpp"
 
 namespace network
 {
@@ -36,6 +37,9 @@ namespace network
         if (!getInit())
             windsoc_startup();
         sock = socket(AF_INET,SOCK_STREAM,0);
+        if (sock == INVALID_SOCKET)
+            throw winsock_except(WSAGetLastError(), "Failed to open socket");
+
         status = sock_status::OPENED;
     }
 
@@ -44,11 +48,11 @@ namespace network
         sin.sin_addr.s_addr	= inet_addr("127.0.0.1");
         sin.sin_family = AF_INET;
         sin.sin_port = htons(port);
-        if ((bind(sock, (SOCKADDR *)&sin, sizeof(sin))) == -1)
-            throw std::system_error(errno, std::system_category(), "Failed to Bind the socket");
+        if ((bind(sock, (SOCKADDR *)&sin, sizeof(sin))) == SOCKET_ERROR)
+            throw winsock_except(WSAGetLastError(), "Failed to Bind the socket");
         status = sock_status::BINDED;
-        if ((listen(sock, backlog)) == -1)
-            throw std::system_error(errno, std::system_category(), "Failed to listen on the socket");
+        if ((listen(sock, backlog)) == SOCKET_ERROR)
+            throw winsock_except(WSAGetLastError(), "Failed to listen on the socket");
         status = sock_status::LISTENING;
     }
 
@@ -57,24 +61,24 @@ namespace network
         sin.sin_addr.s_addr	= inet_addr(addr.c_str());
         sin.sin_family = AF_INET;
         sin.sin_port = htons(port);
-        if ((connect(sock, (SOCKADDR *)&sin, sizeof(sin))) == -1)
-            throw std::system_error(errno, std::system_category(), "Failed to Bind the socket");
+        if ((connect(sock, (SOCKADDR *)&sin, sizeof(sin))) == SOCKET_ERROR)
+            throw winsock_except(WSAGetLastError(), "Failed to Bind the socket");
         status = sock_status::CONNECTED;
     }
 
     int Socket::send(void *buf, int len, int flags)
     {
         int i = ::send(sock, static_cast<const char*>(buf), len, flags);
-        if (i == -1)
-            throw std::system_error(errno, std::system_category(), "Failed to send");
+        if (i == SOCKET_ERROR)
+            throw winsock_except(WSAGetLastError(), "Failed to send");
         return i;
 
     }
     int Socket::recv(void *buf, int len, int flags)
     {
         int i = ::recv(sock,static_cast<char*>(buf), len, flags);
-        if (i == -1)
-            throw std::system_error(errno, std::system_category(), "Failed to recv");
+        if (i == SOCKET_ERROR)
+            throw winsock_except(WSAGetLastError(), "Failed to recv");
         return i;
     }
 
@@ -90,5 +94,12 @@ namespace network
 #ifdef __linux__
     void Socket::windsoc_startup(){}
     void Socket::windsoc_startup(){}
+
+
+    template<>
+    int Socket::getUnderlyingSocket()
+    {
+        return sock;
+    };
 #endif
 }

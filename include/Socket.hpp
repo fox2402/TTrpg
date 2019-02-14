@@ -42,6 +42,7 @@ namespace network
 #endif
 #ifdef __linux__
         ssize_t send(void* buf, size_t len, int flags);
+        ssize_t recv(void* buf, size_t len, int flags)
 #endif
         template<typename T>
         T getUnderlyingSocket();
@@ -51,7 +52,7 @@ namespace network
 
 
 #ifdef __linux__
-        int socket;
+        int sock;
 #endif
 
 #ifdef _WIN32
