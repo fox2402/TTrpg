@@ -5,7 +5,9 @@
 
 #include <system_error>
 
-#include "winsock_except.hpp"
+#ifdef _WIN32
+#include "winsock_errors.hpp"
+#endif
 
 namespace network
 {
@@ -38,7 +40,7 @@ namespace network
             windsoc_startup();
         sock = socket(AF_INET,SOCK_STREAM,0);
         if (sock == INVALID_SOCKET)
-            throw winsock_except(WSAGetLastError(), "Failed to open socket");
+            throw std::system_error(errno, winsock_errors());
 
         status = sock_status::OPENED;
     }
@@ -49,10 +51,10 @@ namespace network
         sin.sin_family = AF_INET;
         sin.sin_port = htons(port);
         if ((bind(sock, (SOCKADDR *)&sin, sizeof(sin))) == SOCKET_ERROR)
-            throw winsock_except(WSAGetLastError(), "Failed to Bind the socket");
+            throw std::system_error(errno, winsock_errors());
         status = sock_status::BINDED;
         if ((listen(sock, backlog)) == SOCKET_ERROR)
-            throw winsock_except(WSAGetLastError(), "Failed to listen on the socket");
+            throw std::system_error(errno, winsock_errors());
         status = sock_status::LISTENING;
     }
 
@@ -62,7 +64,7 @@ namespace network
         sin.sin_family = AF_INET;
         sin.sin_port = htons(port);
         if ((connect(sock, (SOCKADDR *)&sin, sizeof(sin))) == SOCKET_ERROR)
-            throw winsock_except(WSAGetLastError(), "Failed to Bind the socket");
+            throw std::system_error(errno, winsock_errors());
         status = sock_status::CONNECTED;
     }
 
@@ -70,7 +72,7 @@ namespace network
     {
         int i = ::send(sock, static_cast<const char*>(buf), len, flags);
         if (i == SOCKET_ERROR)
-            throw winsock_except(WSAGetLastError(), "Failed to send");
+            throw std::system_error(errno, winsock_errors());
         return i;
 
     }
@@ -78,7 +80,7 @@ namespace network
     {
         int i = ::recv(sock,static_cast<char*>(buf), len, flags);
         if (i == SOCKET_ERROR)
-            throw winsock_except(WSAGetLastError(), "Failed to recv");
+            throw std::system_error(errno, winsock_errors());
         return i;
     }
 
