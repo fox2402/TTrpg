@@ -8,6 +8,10 @@
 #ifdef _WIN32
 #include "winsock_errors.hpp"
 #endif
+#ifdef __linux__
+#include <sys/types.h>
+#include <sys/socket.h>
+#endif
 
 namespace network
 {
@@ -38,9 +42,9 @@ namespace network
     {
         if (!getInit())
             windsoc_startup();
-        sock = socket(AF_INET,SOCK_STREAM,0);
+        sock = socket(AF_INET,SOCK_STREAM, 0);
         if (sock == INVALID_SOCKET)
-            throw std::system_error(errno, winsock_errors());
+            throw std::system_error(WSAGetLastError(), winsock_errors());
 
         status = sock_status::OPENED;
     }
@@ -51,10 +55,10 @@ namespace network
         sin.sin_family = AF_INET;
         sin.sin_port = htons(port);
         if ((bind(sock, (SOCKADDR *)&sin, sizeof(sin))) == SOCKET_ERROR)
-            throw std::system_error(errno, winsock_errors());
+            throw std::system_error(WSAGetLastError(), winsock_errors());
         status = sock_status::BINDED;
         if ((listen(sock, backlog)) == SOCKET_ERROR)
-            throw std::system_error(errno, winsock_errors());
+            throw std::system_error(WSAGetLastError(), winsock_errors());
         status = sock_status::LISTENING;
     }
 
@@ -64,7 +68,7 @@ namespace network
         sin.sin_family = AF_INET;
         sin.sin_port = htons(port);
         if ((connect(sock, (SOCKADDR *)&sin, sizeof(sin))) == SOCKET_ERROR)
-            throw std::system_error(errno, winsock_errors());
+            throw std::system_error(WSAGetLastError(), winsock_errors());
         status = sock_status::CONNECTED;
     }
 
@@ -72,7 +76,7 @@ namespace network
     {
         int i = ::send(sock, static_cast<const char*>(buf), len, flags);
         if (i == SOCKET_ERROR)
-            throw std::system_error(errno, winsock_errors());
+            throw std::system_error(WSAGetLastError(), winsock_errors());
         return i;
 
     }
@@ -80,7 +84,7 @@ namespace network
     {
         int i = ::recv(sock,static_cast<char*>(buf), len, flags);
         if (i == SOCKET_ERROR)
-            throw std::system_error(errno, winsock_errors());
+            throw std::system_error(WSAGetLastError(), winsock_errors());
         return i;
     }
 
@@ -96,8 +100,13 @@ namespace network
 #ifdef __linux__
     void Socket::windsoc_startup(){}
     void Socket::windsoc_startup(){}
-
-
+    Socket::Socket()
+    {
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock == -1)
+            throw std::system_error(errno, std::system_category());
+    }
+    
     template<>
     int Socket::getUnderlyingSocket()
     {
