@@ -1,6 +1,7 @@
 //
 // Created by Yuudachi Kai on 3/5/2019.
 //
+#pragma once
 
 #include "Socket.hpp"
 
@@ -22,7 +23,7 @@ namespace network {
 
         explicit Server(bool local);
 
-        template<typename T>
+        template<enum T>
         int RPCCall(void* data);
 
         int updatePosition(void* data);
@@ -31,6 +32,8 @@ namespace network {
 
     private:
         bool local_;
-
+        Socket server;
     };
 }
+
+#include "server.hxx"
