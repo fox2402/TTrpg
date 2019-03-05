@@ -106,7 +106,7 @@ namespace network
         if (sock == -1)
             throw std::system_error(errno, std::system_category());
     }
-    
+
     template<>
     int Socket::getUnderlyingSocket()
     {
