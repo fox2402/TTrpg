@@ -4,6 +4,8 @@
 #include "Socket.hpp"
 
 #include <system_error>
+#include <Socket.hpp>
+
 
 #ifdef _WIN32
 #include "winsock_errors.hpp"
@@ -94,6 +96,19 @@ namespace network
         return sock;
     }
 
+
+
+    void Socket::close() {
+        int i = closesocket(sock);
+        if (i == SOCKET_ERROR)
+            throw std::system_error(WSAGetLastError(), winsock_errors());
+        status = sock_status ::CLOSED;
+    }
+
+    Socket::~Socket() {
+        if (status != sock_status::CLOSED)
+            closesocket(sock);
+    }
 
 #endif
 

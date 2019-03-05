@@ -36,6 +36,7 @@ namespace network
         ~Socket();
         void bind_and_listen(int port, int backlog);
         void connect_to_addr(std::string addr, int port);
+        void close();
 #ifdef _WIN32
         int send(void* buf, int len, int flags);
         int recv(void* buf, int len, int flags);
