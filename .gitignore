@@ -35,4 +35,3 @@
 cmake-*
 build/*
 include/asio/*
-external/*
