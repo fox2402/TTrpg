@@ -17,15 +17,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -O3")
 
 if (((NOT ASIO_PATH) OR (NOT EXISTS ${ASIO_PATH})))
         message("Unable to find asio")
-        execute_process(COMMAND mkdir external)
-        execute_process(COMMAND git submodule update --init -- external/asio WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+        #workaround for git submodule bug, kinda sad but works
+        execute_process(COMMAND rm -rf external/asio)
+        execute_process(COMMAND git submodule update)
 endif()
 
 
 
 add_executable(ttrpg src/main.cpp src/Socket.cpp src/grid.cpp src/winsock_errors.cpp src/server.cpp)
 
-target_include_directories(ttrpg PRIVATE ${CMAKE_SOURCE_DIR}/include ASIO_PATH)
+target_include_directories(ttrpg PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH})
 #target_link_libraries(ttrpg ${Boost_LIBRARIES})
 
 if (WIN32)
