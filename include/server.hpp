@@ -23,9 +23,6 @@ namespace network {
 
         explicit Server(bool local);
 
-        template<enum T>
-        int RPCCall(void* data);
-
         int updatePosition(void* data);
 
         void fetchUpdates();
