@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "grid.hpp"
-#include "asio/associated_allocator.hpp"
+#include "asio/detail/array.hpp"
 
 int main()
 {
