@@ -6,6 +6,7 @@ project(TTrpg)
 add_compile_definitions(ASIO_STANDALONE)
 #external dependencies
 set(ASIO_PATH ${CMAKE_SOURCE_DIR}/external/asio/asio/include)
+set(CATCH_PATH ${CMAKE_SOURCE_DIR}/external/catch/single_include/)
 
 #compiler def
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -pedantic -Werror")
@@ -13,22 +14,34 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -O3")
 
 #asio dependency resolution
-#find_path(ASIO_PATH)
-
 if (((NOT ASIO_PATH) OR (NOT EXISTS ${ASIO_PATH})))
         message("Unable to find asio")
         #workaround for git submodule bug, kinda sad but works
-        execute_process(COMMAND rm -rf external/asio)
-        execute_process(COMMAND git submodule update)
+        execute_process(COMMAND rm -rf ${CMAKE_SOURCE_DIR}/external/asio)
+        execute_process(COMMAND git submodule update --init ${CMAKE_SOURCE_DIR}/external/asio)
 endif()
 
+#catch dependency resolution
+if (((NOT CATCH_PATH) OR (NOT EXISTS ${CATCH_PATH})))
+        message("Unable to find catch")
+        #workaround for git submodule bug, kinda sad but works
+        execute_process(COMMAND rm -rf ${CMAKE_SOURCE_DIR}/external/catch)
+        execute_process(COMMAND git submodule update --init ${CMAKE_SOURCE_DIR}/external/catch)
+endif()
 
+set(TTRPG_TARGET ttrpg)
+set(TESTS_TARGET catch)
 
-add_executable(ttrpg src/main.cpp src/Socket.cpp src/grid.cpp src/winsock_errors.cpp src/server.cpp)
+set(TTRPG_SRC src/Socket.cpp src/grid.cpp src/winsock_errors.cpp src/server.cpp)
+#set(TESTS_SRC tests/testfile.cpp)
 
-target_include_directories(ttrpg PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH})
-#target_link_libraries(ttrpg ${Boost_LIBRARIES})
+add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC})
+add_executable(${TESTS_TARGET} tests/catch.cpp ${TTRPG_SRC})# ${TESTS_SRC})
+
+target_include_directories(${TTRPG_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH})
+target_include_directories(${TESTS_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${CATCH_PATH})
 
 if (WIN32)
-    target_link_libraries(ttrpg wsock32 ws2_32)
+    target_link_libraries(${TTRPG_TARGET} wsock32 ws2_32)
+    target_link_libraries(${TESTS_TARGET} wsock32 ws2_32)
 endif(WIN32)
