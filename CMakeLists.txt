@@ -8,7 +8,7 @@ add_compile_definitions(ASIO_STANDALONE)
 set(ASIO_PATH ${CMAKE_SOURCE_DIR}/external/asio/asio/include)
 
 #compiler def
-set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -pedantic -Werror")
+set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -pedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -O3")
 
