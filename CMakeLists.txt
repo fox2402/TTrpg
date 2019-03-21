@@ -13,6 +13,7 @@ set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -pedantic -Werror")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -O3")
 
+
 #asio dependency resolution
 if (((NOT ASIO_PATH) OR (NOT EXISTS ${ASIO_PATH})))
         message("Unable to find asio")
@@ -32,7 +33,7 @@ endif()
 set(TTRPG_TARGET ttrpg)
 set(TESTS_TARGET catch)
 
-set(TTRPG_SRC src/Socket.cpp src/grid.cpp src/winsock_errors.cpp src/server.cpp)
+set(TTRPG_SRC src/grid.cpp src/server.cpp)
 #set(TESTS_SRC tests/testfile.cpp)
 
 add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC})
@@ -40,8 +41,3 @@ add_executable(${TESTS_TARGET} tests/catch.cpp ${TTRPG_SRC})# ${TESTS_SRC})
 
 target_include_directories(${TTRPG_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH})
 target_include_directories(${TESTS_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${CATCH_PATH})
-
-if (WIN32)
-    target_link_libraries(${TTRPG_TARGET} wsock32 ws2_32)
-    target_link_libraries(${TESTS_TARGET} wsock32 ws2_32)
-endif(WIN32)
