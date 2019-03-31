@@ -1,8 +1,11 @@
 //
 // Created by Yuudachi Kai on 3/31/2019.
 //
+
 #pragma once
 #include<variant>
+
+#include "utils/singleton.hpp"
 
 
 namespace network
@@ -26,6 +29,11 @@ namespace network
   class GameManager
   {
   public:
+    virtual ~GameManager() = 0;
+
+    virtual void processAction(NetworkAction &p_act) = 0;
+
+
   protected:
 
   };
