@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include <asio.hpp>
 #include "GM/GameManager.hpp"
 
 namespace GM
@@ -14,7 +14,11 @@ namespace GM
     ~GameManagerLocal(){};
 
     void processAction(NetworkAction &p_act);
-    void init(bool p_online);
+    void init();
 
+  private:
+    asio::ip::tcp::socket mainSocket_;
   };
+
+
 }

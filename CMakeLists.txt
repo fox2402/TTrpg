@@ -36,7 +36,7 @@ set(TESTS_TARGET catch)
 set(TTRPG_SRC src/grid.cpp src/GameManagerLocal.cpp)
 #set(TESTS_SRC tests/testfile.cpp)
 
-add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC})
+add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC} src/GameManagerServer.cpp)
 add_executable(${TESTS_TARGET} tests/catch.cpp ${TTRPG_SRC})# ${TESTS_SRC})
 
 target_include_directories(${TTRPG_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH})
