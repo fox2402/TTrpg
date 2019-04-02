@@ -8,7 +8,7 @@
 #include "utils/singleton.hpp"
 
 
-namespace network
+namespace GM
 {
 
 

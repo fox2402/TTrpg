@@ -16,7 +16,7 @@ template <class T>
 class Singleton : SingletonBase<T> {
 public:
   static const T& instance() {
-    static T static_instance(SingletonExclusiveConstructor{});
+    static T static_instance(SingletonBase<T>::SingletonExclusiveConstructor());
     return static_instance;
   };
 };
@@ -25,7 +25,7 @@ template <class T>
 class MutableSingleton : SingletonBase<T> {
 public:
   static T& instance() {
-    static T static_instance(SingletonExclusiveConstructor{});
+    static T static_instance(SingletonBase<T>::SingletonExclusiveConstructor());
     return static_instance;
   };
 };
