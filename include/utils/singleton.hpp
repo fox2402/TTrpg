@@ -19,6 +19,10 @@ public:
     static T static_instance(SingletonBase<T>::SingletonExclusiveConstructor());
     return static_instance;
   };
+protected:
+  Singleton<T>(typename SingletonBase<T>::SingletonExclusiveConstructor ctor)
+  : SingletonBase<T>(ctor)
+  {}
 };
 
 template <class T>
@@ -28,4 +32,8 @@ public:
     static T static_instance(SingletonBase<T>::SingletonExclusiveConstructor());
     return static_instance;
   };
+protected:
+  MutableSingleton<T>(typename SingletonBase<T>::SingletonExclusiveConstructor ctor)
+      : SingletonBase<T>(ctor)
+  {}
 };
