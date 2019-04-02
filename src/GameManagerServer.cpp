@@ -16,7 +16,7 @@ namespace GM
       asio::ip::tcp::endpoint endpoint;
       asio::ip::tcp::acceptor acceptor{service_, endpoint};
       asio::ip::tcp::socket& newClient = clients_.emplace_back(service_);
-
+      (void) newClient;
       asio::error_code code;
       mainSocket_.connect(endpoint, code);
 
