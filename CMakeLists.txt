@@ -33,7 +33,7 @@ endif()
 set(TTRPG_TARGET ttrpg)
 set(TESTS_TARGET catch)
 
-set(TTRPG_SRC src/grid.cpp src/server.cpp)
+set(TTRPG_SRC src/grid.cpp src/GameManagerLocal.cpp)
 #set(TESTS_SRC tests/testfile.cpp)
 
 add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC})

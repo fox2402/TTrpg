@@ -6,12 +6,15 @@
 
 #include "GM/GameManager.hpp"
 
-
-class GameManagerClient : public GameManager, public MutableSingleton<GameManagerClient>
+namespace GM
 {
-public:
-  ~GameManagerClient(){};
+  class GameManagerLocal : public GameManager, public MutableSingleton<GameManagerLocal>
+  {
+  public:
+    ~GameManagerLocal(){};
 
-  void processAction(NetworkAction& p_act);
+    void processAction(NetworkAction &p_act);
+    void init(bool p_online);
 
-};
+  };
+}
