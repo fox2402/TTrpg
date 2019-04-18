@@ -4,3 +4,6 @@
 [submodule "external/catch"]
 	path = external/catch
 	url = git@github.com:catchorg/Catch2.git
+[submodule "external/rapidjson"]
+	path = external/rapidjson
+	url = git@github.com:Tencent/rapidjson.git

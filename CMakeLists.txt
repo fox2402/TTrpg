@@ -7,6 +7,7 @@ add_compile_definitions(ASIO_STANDALONE)
 #external dependencies
 set(ASIO_PATH ${CMAKE_SOURCE_DIR}/external/asio/asio/include)
 set(CATCH_PATH ${CMAKE_SOURCE_DIR}/external/catch/single_include/)
+set(RJSON_PATH ${CMAKE_SOURCE_DIR}/external/rapidjson/include)
 
 #compiler def
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -pedantic -Werror")
@@ -30,6 +31,14 @@ if (((NOT CATCH_PATH) OR (NOT EXISTS ${CATCH_PATH})))
         execute_process(COMMAND git submodule update --init ${CMAKE_SOURCE_DIR}/external/catch)
 endif()
 
+#catch dependency resolution
+if (((NOT RJSON_PATH) OR (NOT EXISTS ${RJSON_PATH})))
+        message("Unable to find rapidJson")
+        #workaround for git submodule bug, kinda sad but works
+        execute_process(COMMAND rm -rf ${CMAKE_SOURCE_DIR}/external/rapidjson)
+        execute_process(COMMAND git submodule update --init ${CMAKE_SOURCE_DIR}/external/rapidjson)
+endif()
+
 set(TTRPG_TARGET ttrpg)
 set(TESTS_TARGET catch)
 
@@ -39,5 +48,5 @@ set(TTRPG_SRC src/grid.cpp src/GameManagerLocal.cpp)
 add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC} src/GameManagerServer.cpp)
 add_executable(${TESTS_TARGET} tests/catch.cpp ${TTRPG_SRC})# ${TESTS_SRC})
 
-target_include_directories(${TTRPG_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH})
-target_include_directories(${TESTS_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${CATCH_PATH})
+target_include_directories(${TTRPG_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${RJSON_PATH})
+target_include_directories(${TESTS_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${RJSON_PATH} ${CATCH_PATH})
