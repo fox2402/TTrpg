@@ -14,7 +14,7 @@ namespace GM
     asio::ip::tcp::endpoint endpoint;
 
     asio::error_code code;
-    mainSocket_.connect(endpoint, code);
+//    mainSocket_.connect(endpoint, code);
 
     if (code)
     {

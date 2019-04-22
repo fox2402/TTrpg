@@ -4,20 +4,27 @@
 
 #pragma once
 #include <asio.hpp>
-#include "GM/GameManager.hpp"
+#include "GM/GameManagerSingleton.hpp"
 
 namespace GM
 {
-  class GameManagerLocal : public GameManager, public MutableSingleton<GameManagerLocal>
+  class GameManagerLocal : public GameManagerSingleton
   {
+    SINGLETON_CLASS(GameManagerLocal, GameManagerSingleton)
+
   public:
-    ~GameManagerLocal(){};
+    SINGLETON_DEFAULT_CTOR_DECL(GameManagerLocal)
+      : SINGLETON_DEFAULT_CTOR_INIT()
+//      , mainSocket_(/* fixme */)
+    {}
+
+    ~GameManagerLocal() {}
 
     void processAction(NetworkAction &p_act);
     void init();
 
   private:
-    asio::ip::tcp::socket mainSocket_;
+//    asio::ip::tcp::socket mainSocket_;
   };
 
 

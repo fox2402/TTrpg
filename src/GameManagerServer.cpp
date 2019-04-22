@@ -33,11 +33,4 @@ namespace GM
 
     }
   }
-  GameManagerServer::GameManagerServer(SingletonBase<GameManagerServer>::SingletonExclusiveConstructor ctor)
-  : GameManager()
-  , MutableSingleton<GameManagerServer>(ctor)
-  , mainSocket_(service_)
-  {
-
-  }
 }

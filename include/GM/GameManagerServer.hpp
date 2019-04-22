@@ -6,20 +6,23 @@
 
 #include <asio.hpp>
 #include <vector>
-#include "GM/GameManager.hpp"
+#include "GM/GameManagerSingleton.hpp"
 
 namespace GM
 {
-  class GameManagerServer : public GameManager, public MutableSingleton<GameManagerServer>
+  class GameManagerServer : public GameManagerSingleton
   {
+    SINGLETON_CLASS(GameManagerServer, GameManagerSingleton)
+
   public:
+    SINGLETON_DEFAULT_CTOR_DECL(GameManagerServer)
+      : SINGLETON_DEFAULT_CTOR_INIT(), mainSocket_(service_)
+    {}
+
     ~GameManagerServer(){};
     void processAction(NetworkAction &p_act);
     void init(bool p_online);
 
-
-  protected:
-    GameManagerServer(SingletonBase<GameManagerServer>::SingletonExclusiveConstructor ctor);
   private:
     asio::ip::tcp::socket mainSocket_;
     std::vector<asio::ip::tcp::socket> clients_;
