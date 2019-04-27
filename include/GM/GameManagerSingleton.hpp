@@ -45,11 +45,7 @@ namespace GM
     GameManagerSingleton::initialize_instance<U>(std::forward(args)...);
   }
 
-  auto instance() -> decltype(GameManagerSingleton::instance()) {
-    return GameManagerSingleton::instance();
-  }
+  auto instance() -> decltype(GameManagerSingleton::instance());
 
-  bool is_instance_initialized() {
-    return GameManagerSingleton::is_instance_initialized();
-  }
+  bool is_instance_initialized();
 }
