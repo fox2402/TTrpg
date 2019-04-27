@@ -7,6 +7,3 @@
 [submodule "external/rapidjson"]
 	path = external/rapidjson
 	url = git@github.com:Tencent/rapidjson.git
-[submodule "external/openssl"]
-	path = external/openssl
-	url = git@github.com:openssl/openssl.git
