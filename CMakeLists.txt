@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(TTrpg)
-set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
-
 
 add_compile_definitions(ASIO_STANDALONE)
 #external dependencies
@@ -54,7 +52,7 @@ set(TTRPG_SRC
 add_executable(${TTRPG_TARGET} src/main.cpp ${TTRPG_SRC})
 add_executable(${TESTS_TARGET} tests/catch.cpp ${TTRPG_SRC})# ${TESTS_SRC})
 
-target_link_libraries(${TTRPG_TARGET} OpenSSL::Crypto OpenSSL::SSL)
+target_link_libraries(${TTRPG_TARGET} OpenSSL::SSL OpenSSL::Crypto)
 
 target_include_directories(${TTRPG_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${RJSON_PATH} ${OPENSSL_INCLUDE_DIR})
 target_include_directories(${TESTS_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include ${ASIO_PATH} ${RJSON_PATH} ${OPENSSL_INCLUDE_DIR} ${CATCH_PATH})
@@ -63,4 +61,7 @@ target_include_directories(${TESTS_TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include $
 if (WIN32)
         target_link_libraries(${TTRPG_TARGET} wsock32 ws2_32)
         target_link_libraries(${TESTS_TARGET} wsock32 ws2_32)
+else (WIN32)
+        target_link_libraries(${TTRPG_TARGET} pthread)
+        target_link_libraries(${TESTS_TARGET} pthread)
 endif(WIN32)
